@@ -9,9 +9,9 @@ const fragment = Fragment_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'AfterCall — the call ended, the CRM updated itself',
+  title: 'AfterCall: the call ended, the CRM updated itself',
   description:
-    'Live demo: a sales-call transcript goes in, an LLM extracts a strictly-typed analysis, deterministic guardrails validate every claim, and the deal card moves across the pipeline. Built by Kumar Abhishek.',
+    'Paste a sales-call transcript, get a typed lead analysis that four plain-code guardrails check before the deal card moves. Built by Kumar Abhishek.',
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

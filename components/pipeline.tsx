@@ -70,11 +70,13 @@ export function Pipeline() {
         </h1>
         <div className="max-w-md self-end leading-relaxed text-ink-soft">
           <p>
-            Paste a sales-call transcript. An LLM extracts a strictly-typed analysis, four
-            deterministic guardrails check every claim, and the deal lands where it belongs.
+            Paste a sales-call transcript. The model returns a typed analysis, then four checks
+            written in plain code decide what to trust: illegal stage jumps get clamped, scores
+            outside their band get flagged, and contact details that never appear in the
+            transcript get marked as invented.
           </p>
           <p className="mt-2 text-ink-faint">
-            Samples serve cached results from real runs. A custom transcript runs live.
+            The three samples serve cached results from real runs. A pasted transcript runs live.
           </p>
         </div>
       </section>
@@ -286,7 +288,7 @@ export function Pipeline() {
           <a href="https://github.com/krabhi4" target="_blank" rel="noreferrer">
             Kumar Abhishek
           </a>{' '}
-          — Next.js, LLM structured outputs, deterministic guardrails
+          with Next.js, LLM structured outputs, and guardrails written in plain code
         </span>
         <span>transcripts are fictional. the API calls are not.</span>
       </footer>
