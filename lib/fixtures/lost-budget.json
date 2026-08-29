@@ -1,0 +1,67 @@
+{
+  "analysis": {
+    "lead": {
+      "name": "Tom",
+      "company": "Not mentioned",
+      "role": null,
+      "email": null,
+      "phone": null
+    },
+    "score": 10,
+    "temperature": "cold",
+    "proposed_stage": "Closed Lost",
+    "summary": "The board froze all new software spend company-wide, pushing non-essential tools to the next fiscal year. Prospect indicated a low likelihood of revival due to a new COO's vendor consolidation strategy.",
+    "action_items": [
+      {
+        "owner": "rep",
+        "task": "Close out the deal on CRM",
+        "due_hint": null
+      },
+      {
+        "owner": "rep",
+        "task": "Send a follow-up email with updated pricing",
+        "due_hint": "March"
+      }
+    ],
+    "objections": [
+      "Board froze all new software spend company-wide.",
+      "Everything non-essential is pushed to next fiscal year.",
+      "New COO wants to consolidate vendors, not add them."
+    ],
+    "buying_signals": [
+      "Eval team liked the product.",
+      "It's purely a money thing, not about the product."
+    ],
+    "sentiment": "neutral",
+    "next_step": "Rep to send a single follow-up email in March."
+  },
+  "finalStage": "Closed Lost",
+  "guardrails": [
+    {
+      "name": "schema_validation",
+      "status": "passed",
+      "detail": "Output parsed against the strict Zod schema on the first attempt."
+    },
+    {
+      "name": "stage_transition",
+      "status": "passed",
+      "detail": "Qualified → Closed Lost is a legal pipeline move."
+    },
+    {
+      "name": "score_consistency",
+      "status": "passed",
+      "detail": "Score 10 sits inside the cold band."
+    },
+    {
+      "name": "contact_provenance",
+      "status": "passed",
+      "detail": "Every extracted contact detail appears verbatim in the transcript."
+    }
+  ],
+  "model": "gemini-2.5-flash",
+  "latencyMs": 8775,
+  "usage": {
+    "input": 509,
+    "output": 324
+  }
+}

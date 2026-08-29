@@ -1,0 +1,84 @@
+{
+  "analysis": {
+    "lead": {
+      "name": "Priya",
+      "company": "Meridian Logistics",
+      "role": null,
+      "email": "priya.sharma@meridianlogistics.com",
+      "phone": "98201-44321"
+    },
+    "score": 90,
+    "temperature": "hot",
+    "proposed_stage": "Proposal Sent",
+    "summary": "The prospect's ops team had a successful trial with the workflow builder, identifying two mismatches their current tool missed. Priya expressed strong interest in starting with 25 seats for the finance pod and is awaiting a formal proposal and compliance document.",
+    "action_items": [
+      {
+        "owner": "rep",
+        "task": "Send compliance one-pager to Priya.",
+        "due_hint": "today"
+      },
+      {
+        "owner": "rep",
+        "task": "Send draft order form/proposal for 25 seats on the Growth plan.",
+        "due_hint": "today"
+      },
+      {
+        "owner": "rep",
+        "task": "Follow up with Priya.",
+        "due_hint": "next Tuesday"
+      },
+      {
+        "owner": "prospect",
+        "task": "Review compliance one-pager.",
+        "due_hint": null
+      },
+      {
+        "owner": "prospect",
+        "task": "Obtain CFO signature for the proposal.",
+        "due_hint": "within two weeks"
+      }
+    ],
+    "objections": [
+      "Concern about audit log details for SOC 2 renewal."
+    ],
+    "buying_signals": [
+      "Ops team ran workflow builder on real data and found value",
+      "Expressed strong interest: 'this is the one we want'",
+      "Asked for a proposal for a specific number of seats (25 seats) for a specific team (finance pod)",
+      "Provided specific contact email and phone number",
+      "Discussed payment terms and annual billing",
+      "Provided a two-week window for CFO signature"
+    ],
+    "sentiment": "positive",
+    "next_step": "Rep to send proposal and compliance documentation today, and follow up next Tuesday."
+  },
+  "finalStage": "Proposal Sent",
+  "guardrails": [
+    {
+      "name": "schema_validation",
+      "status": "passed",
+      "detail": "Output parsed against the strict Zod schema on the first attempt."
+    },
+    {
+      "name": "stage_transition",
+      "status": "passed",
+      "detail": "Demo Scheduled → Proposal Sent is a legal pipeline move."
+    },
+    {
+      "name": "score_consistency",
+      "status": "passed",
+      "detail": "Score 90 sits inside the hot band."
+    },
+    {
+      "name": "contact_provenance",
+      "status": "passed",
+      "detail": "Every extracted contact detail appears verbatim in the transcript."
+    }
+  ],
+  "model": "gemini-2.5-flash",
+  "latencyMs": 7847,
+  "usage": {
+    "input": 559,
+    "output": 523
+  }
+}

@@ -60,4 +60,5 @@ export type AnalyzeResponse = {
   model: string
   latencyMs: number
   usage: { input: number; output: number }
+  cached?: boolean
 }

@@ -1,0 +1,74 @@
+{
+  "analysis": {
+    "lead": {
+      "name": "Marcus",
+      "company": "fieldnote.agency",
+      "role": null,
+      "email": "marcus@fieldnote.agency",
+      "phone": null
+    },
+    "score": 55,
+    "temperature": "warm",
+    "proposed_stage": "Qualified",
+    "summary": "Marcus from Fieldnote Agency expressed significant pain points with their current client onboarding process, including missed deadlines and inefficiencies. He is interested in Relay's solution and will review a demo video and case study with his account leads before considering a Q3 budget discussion.",
+    "action_items": [
+      {
+        "owner": "rep",
+        "task": "Send two-minute demo video and case study to Marcus.",
+        "due_hint": "today"
+      },
+      {
+        "owner": "rep",
+        "task": "Follow up with Marcus.",
+        "due_hint": "in a week"
+      },
+      {
+        "owner": "prospect",
+        "task": "Review and share demo video and case study with account leads.",
+        "due_hint": null
+      }
+    ],
+    "objections": [
+      "Previously found competitor (Monday) too complex ('felt like too much')."
+    ],
+    "buying_signals": [
+      "Client onboarding takes two weeks and leads to mistakes.",
+      "Missed a contract renewal date, which caught partners' attention.",
+      "Interest in repeatable checklists with deadlines and client-visible status.",
+      "Identified internal users for the solution (account leads, PM team).",
+      "Q3 budget review in six weeks identified as a potential timeline.",
+      "Acknowledged that the renewal miss makes the timing for a solution 'not bad'."
+    ],
+    "sentiment": "positive",
+    "next_step": "Rep to send demo video and case study, then follow up in one week to discuss next steps towards a team walkthrough."
+  },
+  "finalStage": "Qualified",
+  "guardrails": [
+    {
+      "name": "schema_validation",
+      "status": "passed",
+      "detail": "Output parsed against the strict Zod schema on the first attempt."
+    },
+    {
+      "name": "stage_transition",
+      "status": "passed",
+      "detail": "New Lead → Qualified is a legal pipeline move."
+    },
+    {
+      "name": "score_consistency",
+      "status": "passed",
+      "detail": "Score 55 sits inside the warm band."
+    },
+    {
+      "name": "contact_provenance",
+      "status": "passed",
+      "detail": "Every extracted contact detail appears verbatim in the transcript."
+    }
+  ],
+  "model": "gemini-2.5-flash",
+  "latencyMs": 12482,
+  "usage": {
+    "input": 565,
+    "output": 449
+  }
+}

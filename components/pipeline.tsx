@@ -42,7 +42,7 @@ export function Pipeline() {
       const res = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transcript, currentStage }),
+        body: JSON.stringify({ transcript, currentStage, sampleId: activeSample }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Analysis failed.')
@@ -82,9 +82,10 @@ export function Pipeline() {
           The CRM <span className="text-amber">updated itself.</span>
         </h1>
         <p className="max-w-md self-end text-[15px] leading-relaxed text-bone-dim">
-          Paste a sales-call transcript. Claude extracts a strictly-typed analysis, four
+          Paste a sales-call transcript. An LLM extracts a strictly-typed analysis, four
           deterministic guardrails check every claim it makes, and the deal card lands where it
-          belongs on the board. Nothing here is mocked: this runs the Claude API on every click.
+          belongs on the board. Sample results are cached from real model runs; a custom
+          transcript runs the pipeline live.
         </p>
       </section>
 
@@ -273,6 +274,7 @@ export function Pipeline() {
                 <p className="font-mono text-[11px] leading-relaxed text-bone-faint">
                   {result.model} · {(result.latencyMs / 1000).toFixed(1)}s · {result.usage.input}{' '}
                   tokens in / {result.usage.output} out
+                  {result.cached && <span className="text-amber"> · cached from a real run</span>}
                 </p>
               </div>
             </section>
@@ -297,7 +299,7 @@ export function Pipeline() {
           >
             Kumar Abhishek
           </a>{' '}
-          — Next.js, Claude API structured outputs, deterministic guardrails.
+          — Next.js, LLM structured outputs, deterministic guardrails.
         </span>
         <span>Transcripts are fictional. The API calls are not.</span>
       </footer>
