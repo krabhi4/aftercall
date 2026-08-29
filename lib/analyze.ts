@@ -4,6 +4,7 @@ import {
   AnalysisSchema,
   LEGAL_TRANSITIONS,
   type Analysis,
+  type AnalyzeResponse,
   type GuardrailResult,
   type Stage,
 } from './schema'
@@ -20,16 +21,10 @@ Rules:
 - action_items are concrete commitments made on the call, each owned by rep or prospect.
 - summary is at most two sentences, written for a sales manager skimming a pipeline review.`
 
-export type AnalysisRun = {
-  analysis: Analysis
-  finalStage: Stage
-  guardrails: GuardrailResult[]
-  model: string
-  latencyMs: number
-  usage: { input: number; output: number }
-}
-
-export async function runAnalysis(transcript: string, currentStage: Stage): Promise<AnalysisRun> {
+export async function runAnalysis(
+  transcript: string,
+  currentStage: Stage,
+): Promise<Omit<AnalyzeResponse, 'cached'>> {
   const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
   const started = Date.now()
 

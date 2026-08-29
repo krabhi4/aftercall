@@ -1,23 +1,18 @@
-import { promises as fs } from 'fs'
-import path from 'path'
 import { NextRequest, NextResponse } from 'next/server'
 import { runAnalysis } from '@/lib/analyze'
 import { STAGES, type Stage } from '@/lib/schema'
 import { SAMPLES } from '@/lib/samples'
+import hotDemo from '@/lib/fixtures/hot-demo.json'
+import warmDiscovery from '@/lib/fixtures/warm-discovery.json'
+import lostBudget from '@/lib/fixtures/lost-budget.json'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
 
-async function readFixture(sampleId: string) {
-  try {
-    const raw = await fs.readFile(
-      path.join(process.cwd(), 'lib', 'fixtures', `${sampleId}.json`),
-      'utf8',
-    )
-    return JSON.parse(raw)
-  } catch {
-    return null
-  }
+const FIXTURES: Record<string, unknown> = {
+  'hot-demo': hotDemo,
+  'warm-discovery': warmDiscovery,
+  'lost-budget': lostBudget,
 }
 
 export async function POST(req: NextRequest) {
@@ -43,7 +38,7 @@ export async function POST(req: NextRequest) {
       sample.transcript.trim() === transcript &&
       sample.currentStage === currentStage
     ) {
-      const fixture = await readFixture(sampleId)
+      const fixture = FIXTURES[sampleId]
       if (fixture) return NextResponse.json({ ...fixture, cached: true })
     }
   }

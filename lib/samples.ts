@@ -1,4 +1,6 @@
-export type Sample = { id: string; label: string; currentStage: string; transcript: string }
+import type { Stage } from './schema'
+
+export type Sample = { id: string; label: string; currentStage: Stage; transcript: string }
 
 export const SAMPLES: Sample[] = [
   {

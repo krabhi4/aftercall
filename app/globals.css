@@ -103,9 +103,6 @@ a {
   animation: trail-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes working {
-  0% { content: 'analyzing'; }
-}
 .working-dots::after {
   content: '';
   animation: dots 1.2s steps(4) infinite;
