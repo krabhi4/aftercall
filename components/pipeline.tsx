@@ -4,16 +4,10 @@ import { useState } from 'react'
 import { STAGES, type AnalyzeResponse, type Stage } from '@/lib/schema'
 import { SAMPLES } from '@/lib/samples'
 
-const TEMP_STYLE: Record<string, string> = {
-  hot: 'text-amber',
-  warm: 'text-bone',
-  cold: 'text-bone-faint',
-}
-
 const RAIL_STYLE: Record<string, string> = {
-  passed: 'text-ok',
-  clamped: 'text-warn',
-  flagged: 'text-amber',
+  passed: 'text-pass',
+  clamped: 'text-clamp',
+  flagged: 'text-flag',
 }
 
 export function Pipeline() {
@@ -57,50 +51,42 @@ export function Pipeline() {
   const a = result?.analysis
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-5 pb-24">
-      <header className="flex items-baseline justify-between border-b border-seam pt-7 pb-4">
+    <main className="mx-auto w-full max-w-7xl px-5 pb-20 text-[13px]">
+      <header className="flex items-baseline justify-between border-b-2 border-ink pt-6 pb-3">
         <div className="flex items-baseline gap-4">
-          <span className="font-mono text-sm tracking-[0.35em] text-bone">AFTERCALL</span>
-          <span className="hidden font-mono text-[11px] tracking-[0.2em] text-amber sm:inline">
-            LIVE PIPELINE
-          </span>
+          <span className="text-base font-bold">AFTERCALL</span>
+          <span className="hidden text-ink-faint sm:inline">transcript → typed CRM truth</span>
         </div>
-        <a
-          href="https://github.com/krabhi4/aftercall"
-          target="_blank"
-          rel="noreferrer"
-          className="text-sm text-bone-dim underline-offset-4 hover:text-bone hover:underline"
-        >
-          Source
+        <a href="https://github.com/krabhi4/aftercall" target="_blank" rel="noreferrer">
+          source
         </a>
       </header>
 
-      <section className="grid gap-x-16 gap-y-5 pt-12 pb-12 lg:grid-cols-[3fr_2fr]">
-        <h1 className="text-[clamp(2.2rem,5.5vw,4rem)] leading-[0.98] font-bold tracking-tight">
+      <section className="grid gap-x-14 gap-y-4 border-b border-rule py-8 lg:grid-cols-[3fr_2fr]">
+        <h1 className="text-[clamp(1.6rem,3.6vw,2.6rem)] leading-tight font-bold">
           The call ended.
           <br />
-          The CRM <span className="text-amber">updated itself.</span>
+          The CRM updated itself.
         </h1>
-        <p className="max-w-md self-end text-[15px] leading-relaxed text-bone-dim">
-          Paste a sales-call transcript. An LLM extracts a strictly-typed analysis, four
-          deterministic guardrails check every claim it makes, and the deal card lands where it
-          belongs on the board. Sample results are cached from real model runs; a custom
-          transcript runs the pipeline live.
-        </p>
+        <div className="max-w-md self-end leading-relaxed text-ink-soft">
+          <p>
+            Paste a sales-call transcript. An LLM extracts a strictly-typed analysis, four
+            deterministic guardrails check every claim, and the deal lands where it belongs.
+          </p>
+          <p className="mt-2 text-ink-faint">
+            Samples serve cached results from real runs. A custom transcript runs live.
+          </p>
+        </div>
       </section>
 
-      <div className="grid items-start gap-10 xl:grid-cols-[400px_1fr]">
-        <section className="space-y-4">
+      <div className="grid items-start gap-10 pt-8 xl:grid-cols-[400px_1fr]">
+        <section className="space-y-3">
           <div className="flex flex-wrap gap-2">
             {SAMPLES.map((s) => (
               <button
                 key={s.id}
                 onClick={() => pickSample(s.id)}
-                className={`border px-3 py-1.5 font-mono text-[11px] tracking-wide transition-colors ${
-                  activeSample === s.id
-                    ? 'border-amber text-amber'
-                    : 'border-seam text-bone-dim hover:border-bone-faint hover:text-bone'
-                }`}
+                className={`btn-ghost px-2.5 py-1 text-[11.5px] ${activeSample === s.id ? 'active' : ''}`}
               >
                 {s.label}
               </button>
@@ -113,69 +99,84 @@ export function Pipeline() {
               setActiveSample(null)
             }}
             spellCheck={false}
-            className="h-[430px] w-full resize-none border border-seam bg-coal-well p-4 font-mono text-[12.5px] leading-relaxed text-bone-dim outline-none focus:border-bone-faint"
+            className="ruled-table h-[420px] w-full resize-none bg-paper p-3 text-[12px] leading-relaxed text-ink-soft outline-none focus:bg-hi/30"
           />
           <div className="flex items-center gap-3">
-            <label className="font-mono text-[11px] tracking-wide text-bone-faint">
-              DEAL CURRENTLY IN
-            </label>
+            <label className="text-[11px] text-ink-faint">deal currently in</label>
             <select
               value={currentStage}
               onChange={(e) => setCurrentStage(e.target.value as Stage)}
-              className="border border-seam bg-coal-raised px-2 py-1.5 font-mono text-[12px] text-bone outline-none"
+              className="btn-ghost px-2 py-1 text-[12px] outline-none"
             >
               {STAGES.filter((s) => !s.startsWith('Closed')).map((s) => (
                 <option key={s}>{s}</option>
               ))}
             </select>
-            <button
-              onClick={run}
-              disabled={running}
-              className="ml-auto bg-amber px-6 py-2 text-sm font-semibold text-coal transition-colors hover:bg-amber-deep disabled:opacity-50"
-            >
-              {running ? 'Analyzing…' : 'Run pipeline'}
+            <button onClick={run} disabled={running} className="btn-ink ml-auto px-5 py-1.5 font-bold">
+              {running ? (
+                <span className="working-dots">analyzing</span>
+              ) : (
+                'RUN PIPELINE'
+              )}
             </button>
           </div>
-          {error && <p className="text-sm text-warn">{error}</p>}
+          {error && <p className="font-bold text-clamp">! {error}</p>}
         </section>
 
-        <div className="min-w-0 space-y-10">
+        <div className="min-w-0 space-y-9">
           <section>
-            <div className="mb-3 flex items-baseline justify-between">
-              <h2 className="font-mono text-[11px] tracking-[0.25em] text-bone-faint">
-                PIPELINE BOARD
-              </h2>
+            <div className="mb-2 flex items-baseline justify-between">
+              <h2 className="font-bold">PIPELINE</h2>
               {result && (
-                <span className="font-mono text-[11px] text-bone-dim">
-                  {currentStage} <span className="text-amber">→</span> {result.finalStage}
+                <span className="text-ink-soft">
+                  {currentStage} → <span className="font-bold">{result.finalStage}</span>
                 </span>
               )}
             </div>
-            <div className="grid grid-cols-3 gap-px border border-seam bg-seam md:grid-cols-6">
-              {STAGES.map((stage) => {
+            <div className="ruled-table grid grid-cols-3 md:grid-cols-6">
+              {STAGES.map((stage, i) => {
                 const isFrom = stage === currentStage && (!result || result.finalStage !== stage)
                 const isLanded = result?.finalStage === stage
                 return (
-                  <div key={stage} className="min-h-[150px] bg-coal-well p-2">
-                    <div className="mb-2 font-mono text-[9.5px] leading-tight tracking-[0.14em] text-bone-faint uppercase">
+                  <div
+                    key={stage}
+                    className={`min-h-[140px] p-2 ${i > 0 ? 'border-l border-rule' : ''}`}
+                  >
+                    <div className="border-b-2 border-ink pb-1 text-[10px] font-bold uppercase">
                       {stage}
                     </div>
-                    {running && isFrom && <div className="scanning h-16 border border-seam" />}
-                    {!running && isFrom && (
-                      <div className="border border-dashed border-seam p-2 font-mono text-[10px] text-bone-faint">
-                        deal is here
-                      </div>
-                    )}
-                    {isLanded && a && (
-                      <div className="card-land border border-amber bg-coal-raised p-2.5">
-                        <div className="text-[13px] font-semibold">{a.lead.name}</div>
-                        <div className="text-[11px] text-bone-dim">{a.lead.company}</div>
-                        <div className="mt-2 flex items-baseline justify-between font-mono text-[11px]">
-                          <span className={TEMP_STYLE[a.temperature]}>{a.temperature}</span>
-                          <span className="text-bone">{a.score}</span>
+                    <div className="pt-2">
+                      {running && isFrom && (
+                        <div className="border-2 border-dashed border-ink-faint p-2 text-[11px] text-ink-faint">
+                          <span className="working-dots">reading</span>
                         </div>
-                      </div>
-                    )}
+                      )}
+                      {!running && isFrom && (
+                        <div className="border-2 border-dashed border-ink-faint p-2 text-[11px] text-ink-faint">
+                          deal is here
+                        </div>
+                      )}
+                      {isLanded && a && (
+                        <div className="hard-card card-land p-2">
+                          <div className="font-bold">{a.lead.name}</div>
+                          <div className="text-[11px] text-ink-soft">{a.lead.company}</div>
+                          <div className="mt-1.5 flex items-baseline justify-between text-[11px]">
+                            <span
+                              className={
+                                a.temperature === 'hot'
+                                  ? 'font-bold text-clamp'
+                                  : a.temperature === 'warm'
+                                    ? 'text-flag'
+                                    : 'text-ink-faint'
+                              }
+                            >
+                              {a.temperature.toUpperCase()}
+                            </span>
+                            <span className="font-bold">{a.score}/100</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )
               })}
@@ -183,35 +184,32 @@ export function Pipeline() {
           </section>
 
           {a && result && (
-            <section className="trail-in grid gap-10 lg:grid-cols-2">
-              <div className="space-y-5">
-                <h2 className="font-mono text-[11px] tracking-[0.25em] text-bone-faint">
-                  EXTRACTION
-                </h2>
-                <p className="text-[15px] leading-relaxed">{a.summary}</p>
-                <dl className="space-y-2 font-mono text-[12.5px]">
-                  <div className="flex gap-3">
-                    <dt className="w-24 shrink-0 text-bone-faint">contact</dt>
-                    <dd className="text-bone-dim">
-                      {[a.lead.role, a.lead.email, a.lead.phone].filter(Boolean).join(' · ') ||
-                        'none stated'}
-                    </dd>
-                  </div>
-                  <div className="flex gap-3">
-                    <dt className="w-24 shrink-0 text-bone-faint">sentiment</dt>
-                    <dd className="text-bone-dim">{a.sentiment}</dd>
-                  </div>
-                  <div className="flex gap-3">
-                    <dt className="w-24 shrink-0 text-bone-faint">next step</dt>
-                    <dd className="text-bone-dim">{a.next_step}</dd>
-                  </div>
-                </dl>
+            <section className="trail-in grid gap-9 lg:grid-cols-2">
+              <div className="space-y-4">
+                <h2 className="font-bold">EXTRACTION</h2>
+                <p className="leading-relaxed">{a.summary}</p>
+                <table className="w-full">
+                  <tbody>
+                    {[
+                      [
+                        'contact',
+                        [a.lead.role, a.lead.email, a.lead.phone].filter(Boolean).join(' · ') ||
+                          'none stated',
+                      ],
+                      ['sentiment', a.sentiment],
+                      ['next step', a.next_step],
+                    ].map(([k, v]) => (
+                      <tr key={k as string} className="border-t border-rule align-top">
+                        <td className="w-24 py-1.5 pr-3 text-[11px] text-ink-faint">{k}</td>
+                        <td className="py-1.5 text-[12.5px] text-ink-soft">{v}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
                 {a.buying_signals.length > 0 && (
                   <div>
-                    <h3 className="mb-1.5 font-mono text-[11px] tracking-wide text-ok">
-                      buying signals
-                    </h3>
-                    <ul className="space-y-1 text-[13.5px] text-bone-dim">
+                    <h3 className="mb-1 text-[11px] font-bold text-pass">BUYING SIGNALS</h3>
+                    <ul className="space-y-0.5 text-[12.5px] text-ink-soft">
                       {a.buying_signals.map((s, i) => (
                         <li key={i}>+ {s}</li>
                       ))}
@@ -220,88 +218,77 @@ export function Pipeline() {
                 )}
                 {a.objections.length > 0 && (
                   <div>
-                    <h3 className="mb-1.5 font-mono text-[11px] tracking-wide text-warn">
-                      objections
-                    </h3>
-                    <ul className="space-y-1 text-[13.5px] text-bone-dim">
+                    <h3 className="mb-1 text-[11px] font-bold text-clamp">OBJECTIONS</h3>
+                    <ul className="space-y-0.5 text-[12.5px] text-ink-soft">
                       {a.objections.map((s, i) => (
-                        <li key={i}>− {s}</li>
+                        <li key={i}>- {s}</li>
                       ))}
                     </ul>
                   </div>
                 )}
                 {a.action_items.length > 0 && (
                   <div>
-                    <h3 className="mb-1.5 font-mono text-[11px] tracking-wide text-bone-faint">
-                      action items
-                    </h3>
-                    <ul className="space-y-1.5 text-[13.5px]">
-                      {a.action_items.map((item, i) => (
-                        <li key={i} className="flex gap-2">
-                          <span
-                            className={`shrink-0 font-mono text-[10.5px] uppercase ${
-                              item.owner === 'rep' ? 'text-amber' : 'text-bone-faint'
-                            }`}
-                          >
-                            {item.owner}
-                          </span>
-                          <span className="text-bone-dim">
-                            {item.task}
-                            {item.due_hint ? ` (${item.due_hint})` : ''}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
+                    <h3 className="mb-1 text-[11px] font-bold text-ink-faint">ACTION ITEMS</h3>
+                    <table className="w-full">
+                      <tbody>
+                        {a.action_items.map((item, i) => (
+                          <tr key={i} className="border-t border-rule align-top">
+                            <td className="w-20 py-1 pr-2 text-[10.5px] font-bold">
+                              {item.owner === 'rep' ? '[REP]' : '[PROSPECT]'}
+                            </td>
+                            <td className="py-1 text-[12.5px] text-ink-soft">
+                              {item.task}
+                              {item.due_hint ? ` (${item.due_hint})` : ''}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 )}
               </div>
 
-              <div className="space-y-5">
-                <h2 className="font-mono text-[11px] tracking-[0.25em] text-bone-faint">
-                  GUARDRAILS
-                </h2>
-                <ol className="divide-y divide-seam border border-seam">
+              <div className="space-y-4">
+                <h2 className="font-bold">GUARDRAILS</h2>
+                <div className="hard-card divide-y divide-rule">
                   {result.guardrails.map((g) => (
-                    <li key={g.name} className="p-3.5">
-                      <div className="flex items-baseline justify-between font-mono text-[12px]">
-                        <span className="text-bone">{g.name}</span>
-                        <span className={RAIL_STYLE[g.status]}>{g.status.toUpperCase()}</span>
+                    <div key={g.name} className="p-3">
+                      <div className="flex items-baseline justify-between">
+                        <span className="font-bold">{g.name}</span>
+                        <span className={`font-bold ${RAIL_STYLE[g.status]}`}>
+                          [{g.status.toUpperCase()}]
+                        </span>
                       </div>
-                      <p className="mt-1 text-[12.5px] leading-relaxed text-bone-dim">{g.detail}</p>
-                    </li>
+                      <p className="mt-1 text-[12px] leading-relaxed text-ink-soft">{g.detail}</p>
+                    </div>
                   ))}
-                </ol>
-                <p className="font-mono text-[11px] leading-relaxed text-bone-faint">
-                  {result.model} · {(result.latencyMs / 1000).toFixed(1)}s · {result.usage.input}{' '}
-                  tokens in / {result.usage.output} out
-                  {result.cached && <span className="text-amber"> · cached from a real run</span>}
+                </div>
+                <p className="text-[11.5px] leading-relaxed text-ink-faint">
+                  {result.model} · {(result.latencyMs / 1000).toFixed(1)}s · {result.usage.input} in
+                  / {result.usage.output} out
+                  {result.cached && <span className="font-bold text-ink-soft"> · CACHED FROM A REAL RUN</span>}
                 </p>
               </div>
             </section>
           )}
 
           {!a && !running && (
-            <p className="border border-dashed border-seam px-4 py-10 text-center text-sm text-bone-faint">
-              Run the pipeline to see the extraction, the guardrail checks, and the card move.
+            <p className="border-2 border-dashed border-ink-faint px-4 py-9 text-center text-ink-faint">
+              run the pipeline to see the extraction, the guardrail checks, and the card move
             </p>
           )}
         </div>
       </div>
 
-      <footer className="mt-20 flex flex-wrap items-baseline justify-between gap-3 border-t border-seam pt-5 text-xs text-bone-faint">
+      <footer className="mt-16 flex flex-wrap items-baseline justify-between gap-3 border-t-2 border-ink pt-4 text-[11.5px] text-ink-faint">
         <span>
-          Built by{' '}
-          <a
-            href="https://github.com/krabhi4"
-            target="_blank"
-            rel="noreferrer"
-            className="text-bone-dim underline underline-offset-4 hover:text-bone"
-          >
+          built by{' '}
+          <a href="https://github.com/krabhi4" target="_blank" rel="noreferrer">
             Kumar Abhishek
           </a>{' '}
-          — Next.js, LLM structured outputs, deterministic guardrails.
+          — Next.js, LLM structured outputs, deterministic guardrails
         </span>
-        <span>Transcripts are fictional. The API calls are not.</span>
+        <span>transcripts are fictional. the API calls are not.</span>
       </footer>
     </main>
   )

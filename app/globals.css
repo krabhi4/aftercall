@@ -1,89 +1,129 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-coal: oklch(0.185 0.008 260);
-  --color-coal-raised: oklch(0.225 0.009 260);
-  --color-coal-well: oklch(0.155 0.007 260);
-  --color-bone: oklch(0.93 0.006 85);
-  --color-bone-dim: oklch(0.72 0.008 85);
-  --color-bone-faint: oklch(0.52 0.008 85);
-  --color-seam: oklch(0.32 0.01 260);
-  --color-amber: oklch(0.80 0.145 78);
-  --color-amber-deep: oklch(0.68 0.14 70);
-  --color-ok: oklch(0.76 0.13 150);
-  --color-warn: oklch(0.68 0.17 30);
+  --color-paper: oklch(0.975 0.005 95);
+  --color-ink: oklch(0.2 0.01 80);
+  --color-ink-soft: oklch(0.42 0.01 80);
+  --color-ink-faint: oklch(0.58 0.008 80);
+  --color-rule: oklch(0.86 0.008 85);
+  --color-link: oklch(0.45 0.19 262);
+  --color-pass: oklch(0.52 0.14 150);
+  --color-clamp: oklch(0.5 0.19 25);
+  --color-flag: oklch(0.55 0.13 70);
+  --color-hi: oklch(0.9 0.06 95);
 
-  --font-sans: var(--font-archivo);
   --font-mono: var(--font-fragment);
-
-  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-sans: var(--font-fragment);
 }
 
 body {
-  background: var(--color-coal);
-  color: var(--color-bone);
-  font-family: var(--font-sans);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-fragment);
 }
 
 ::selection {
-  background: var(--color-amber);
-  color: var(--color-coal);
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+a {
+  color: var(--color-link);
+}
+
+.hard-card {
+  border: 2px solid var(--color-ink);
+  background: var(--color-paper);
+  box-shadow: 5px 5px 0 var(--color-ink);
+}
+
+.ruled-table {
+  border: 2px solid var(--color-ink);
+}
+
+.btn-ink {
+  border: 2px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  box-shadow: 4px 4px 0 oklch(0.2 0.01 80 / 0.25);
+  transition: transform 0.06s ease, box-shadow 0.06s ease;
+}
+.btn-ink:hover:not(:disabled) {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+.btn-ink:active:not(:disabled) {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 oklch(0.2 0.01 80 / 0.25);
+}
+.btn-ink:disabled {
+  opacity: 0.5;
+}
+
+.btn-ghost {
+  border: 2px solid var(--color-ink);
+  background: var(--color-paper);
+  transition: background 0.08s ease;
+}
+.btn-ghost:hover {
+  background: var(--color-hi);
+}
+.btn-ghost.active {
+  background: var(--color-ink);
+  color: var(--color-paper);
 }
 
 @keyframes card-land {
   from {
     opacity: 0;
-    transform: translateY(-14px) scale(0.97);
+    transform: translate(-6px, -10px);
+    box-shadow: 12px 14px 0 var(--color-ink);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(0, 0);
+    box-shadow: 5px 5px 0 var(--color-ink);
   }
+}
+.card-land {
+  animation: card-land 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes trail-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-
-@keyframes scan {
-  0% {
-    background-position: 0% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.card-land {
-  animation: card-land 0.6s var(--ease-out-quint) both;
-}
-
 .trail-in {
-  animation: trail-in 0.5s var(--ease-out-quint) both;
+  animation: trail-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.scanning {
-  background: linear-gradient(
-    90deg,
-    var(--color-coal-raised) 0%,
-    oklch(0.28 0.02 78) 50%,
-    var(--color-coal-raised) 100%
-  );
-  background-size: 200% 100%;
-  animation: scan 1.4s linear infinite;
+@keyframes working {
+  0% { content: 'analyzing'; }
+}
+.working-dots::after {
+  content: '';
+  animation: dots 1.2s steps(4) infinite;
+}
+@keyframes dots {
+  0% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .card-land,
-  .trail-in,
-  .scanning {
+  .trail-in {
+    animation: none;
+  }
+  .working-dots::after {
+    content: '...';
     animation: none;
   }
 }
